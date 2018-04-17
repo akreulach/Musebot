@@ -1,0 +1,20 @@
+raw_notes = []
+this_note = []
+for i in range(0,num_notes):
+    this_note = notes[i]
+    raw_notes.append(this_note["name"])
+
+note_names = sorted(list(set(raw_notes)))
+notes_to_int = dict((c,i) for i, c in enumerate(note_names))
+n_names = len(raw_notes)
+n_vocab = len(note_names)
+
+
+
+# remove labels, list of dict -> list of list
+for i in range(0,num_notes):
+    notes[i] = list(notes[i].values())
+
+
+
+
