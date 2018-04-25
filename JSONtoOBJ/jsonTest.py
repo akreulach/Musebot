@@ -1,11 +1,17 @@
 import json
 import numpy
+import pandas
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import LSTM
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils
+from keras.wrappers.scikit_learn import KerasRegressor
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
 num_files = 5
 json_data = []
@@ -59,10 +65,11 @@ X = numpy.reshape(dataX, (n_patterns, seq_length, num_features))
 Y = numpy.reshape(dataY, (n_patterns, num_features))
 
 model = Sequential()
-model.add(LSTM(256, input_shape=(seq_length,num_features))) # X.shape[1],X.shape[2]
+model.add(Dense(5, input_shape=(seq_length,num_features), kernel_initializer='normal')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
-model.add(Dense(5, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+model.add(Dense(5, kernel_initializer='normal'))
+model.compile(loss='mean_squared_error', optimizer='adam')
 
 filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
