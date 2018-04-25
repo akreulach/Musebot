@@ -60,12 +60,12 @@ for i in range(0, num_notes - seq_length, 1):
     dataY.append(seq_out)
 n_patterns = len(dataX)
 
-X = numpy.reshape(dataX, (n_patterns, seq_length, num_features))
+X = numpy.reshape(dataX, (n_patterns, seq_length * num_features))
 
 Y = numpy.reshape(dataY, (n_patterns, num_features))
 
 model = Sequential()
-model.add(Dense(5, input_shape=(seq_length,num_features), kernel_initializer='normal')) # X.shape[1],X.shape[2]
+model.add(Dense(5, input_dim=(seq_length * num_features), kernel_initializer='normal')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
 model.add(Dense(10, kernel_initializer='normal', activation='relu'))
 model.add(Dense(5, kernel_initializer='normal'))
