@@ -55,31 +55,34 @@ for i in range(0, num_notes - seq_length, 1):
     dataY.append(seq_out)
 n_patterns = len(dataX)
 
-X = numpy.reshape(dataX, (n_patterns, seq_length, num_features))
+X = numpy.reshape(dataX, (n_patterns, seq_length * num_features))
 
 Y = numpy.reshape(dataY, (n_patterns, num_features))
 
 model = Sequential()
-model.add(LSTM(256, input_shape=(seq_length,num_features))) # X.shape[1],X.shape[2]
+model.add(Dense(5, input_dim=(seq_length * num_features), kernel_initializer='normal')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
-model.add(Dense(5, activation='softmax'))
+model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+model.add(Dense(5, kernel_initializer='normal'))
 
 
 
 # load the network weights
-filename = "best.hdf5"
+filename = "bestFlat.hdf5"
 model.load_weights(filename)
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+model.compile(loss='mean_squared_error', optimizer='adam')
 # pick a random seed
-start = numpy.random.randint(0, len(dataX)-1)
+start = numpy.random.randint(0, len(dataX)-100)
 pattern = dataX[start]
 # generate notes
-for i in range(10):
-	x = numpy.reshape(pattern, (1, len(pattern), 5))
-	prediction = model.predict(x, verbose=0)
-	index = numpy.argmax(prediction)
-	result = index
-	print(result)
-	pattern.append(index)
-	pattern = pattern[1:len(pattern)]
+for i in range(100):
+    x = numpy.reshape(pattern, (1, seq_length * num_features))
+    prediction = model.predict(x, verbose=0)
+    #index = numpy.argmax(prediction)
+    #result = index
+    #print(result)
+    pattern.append(prediction.tolist()[0])
+    print("\n")
+    pattern = pattern[1:len(pattern)]
+    print(pattern)
 print("\nDone.")
