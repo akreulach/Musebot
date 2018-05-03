@@ -74,15 +74,26 @@ model.compile(loss='mean_squared_error', optimizer='adam')
 # pick a random seed
 start = numpy.random.randint(0, len(dataX)-100)
 pattern = dataX[start]
+output = []
+shenanigan = []
 # generate notes
 for i in range(100):
     x = numpy.reshape(pattern, (1, seq_length * num_features))
     prediction = model.predict(x, verbose=0)
     #index = numpy.argmax(prediction)
-    #result = index
-    #print(result)
-    pattern.append(prediction.tolist()[0])
-    print("\n")
+    shenanigan = prediction.tolist()[0]
+    #shenanigan[2] = numpy.argmax(shenanigan[2])
+    pattern.append(shenanigan)
     pattern = pattern[1:len(pattern)]
-    print(pattern)
+    output.append(shenanigan)
+
+g = open('garb.txt','w')
+for r in range(len(output)):
+    for q in range(5):
+        g.write(str(output[r][q]))
+        if(q != 4):
+            g.write(', ')
+        else:
+            g.write("\n")
+g.close()
 print("\nDone.")
