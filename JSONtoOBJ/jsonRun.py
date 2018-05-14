@@ -80,15 +80,17 @@ shenanigan = []
 for i in range(100):
     x = numpy.reshape(pattern, (1, seq_length * num_features))
     prediction = model.predict(x, verbose=0)
-    #index = numpy.argmax(prediction)
     shenanigan = prediction.tolist()[0]
-    #shenanigan[2] = numpy.argmax(shenanigan[2])
+    shenanigan[0] = round(shenanigan[0])
+    shenanigan[1] = round(shenanigan[1])
     pattern.append(shenanigan)
     pattern = pattern[1:len(pattern)]
     output.append(shenanigan)
 
 g = open('garb.txt','w')
 for r in range(len(output)):
+    output[r][0] = int(output[r][0])
+    output[r][1] = int(output[r][1])
     for q in range(5):
         g.write(str(output[r][q]))
         if(q != 4):
