@@ -32,7 +32,7 @@ for i in range(0,num_notes):
 
 note_names = sorted(list(set(raw_notes)))
 notes_to_int = dict((c,i) for i, c in enumerate(note_names))
-int_to_notes = dict((c,i) for i, c in enumerate(note_names))
+int_to_notes = dict((c,i) for c, i in enumerate(note_names))
 n_names = len(raw_notes)
 n_vocab = len(note_names)
 
@@ -88,14 +88,34 @@ for i in range(100):
     output.append(shenanigan)
 
 g = open('garb.txt','w')
+g.write("\"notes\": [")
 for r in range(len(output)):
-    output[r][0] = int(output[r][0])
+    output[r][0] = int_to_notes[int(output[r][0])]
     output[r][1] = int(output[r][1])
+    g.write('{')
     for q in range(5):
+        if(q == 0):
+            g.write("\"name\":\"")
+        if(q == 1):
+            g.write("\"midi\":")
+        if(q == 2):
+            g.write("\"time\":")
+        if(q == 3):
+            g.write("\"velocity\":")
+        if(q == 4):
+            g.write("\"duration\":")
         g.write(str(output[r][q]))
+        if(q == 0):
+            g.write("\"")
         if(q != 4):
-            g.write(', ')
+            g.write(',')
         else:
             g.write("\n")
+    if(r != len(output)-1):
+        g.write('},')
+    else:
+        g.write('}')
+g.write("],")
 g.close()
 print("\nDone.")
+#{"name":"","midi":,"time":,"velocity":,"duration":},
