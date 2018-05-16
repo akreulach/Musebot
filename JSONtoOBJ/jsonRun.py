@@ -81,8 +81,6 @@ for i in range(100):
     x = numpy.reshape(pattern, (1, seq_length * num_features))
     prediction = model.predict(x, verbose=0)
     shenanigan = prediction.tolist()[0]
-    shenanigan[0] = round(shenanigan[0])
-    shenanigan[1] = round(shenanigan[1])
     pattern.append(shenanigan)
     pattern = pattern[1:len(pattern)]
     output.append(shenanigan)
@@ -90,7 +88,9 @@ for i in range(100):
 g = open('garb.txt','w')
 g.write("\"notes\":[")
 for r in range(len(output)):
-    output[r][0] = int_to_notes[int(output[r][0])]
+    temp = output[r][0]
+    output[r][0] = int_to_notes[int(output[r][4])]
+    output[r][4] = temp
     output[r][1] = int(output[r][1]) + 12
     g.write('{')
     for q in range(5):
@@ -116,4 +116,5 @@ for r in range(len(output)):
 g.write("],")
 g.close()
 print("\nDone.")
-#{"name":"","midi":,"time":,"velocity":,"duration":},
+#Output: {"name":"A#2","midi":18,"time":64.35739135742188,"velocity":0.2621094882488251,"duration":39.22246551513672}
+# Input: {"name":"E4","midi":64,"time":9.309090909090909,"velocity":0.5748031496062992,"duration":0.5250000000000004}
