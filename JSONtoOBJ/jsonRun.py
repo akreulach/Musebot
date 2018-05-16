@@ -88,7 +88,7 @@ for i in range(100):
     output.append(shenanigan)
 
 g = open('garb.txt','w')
-g.write("\"notes\": [")
+g.write("\"notes\":[")
 for r in range(len(output)):
     output[r][0] = int_to_notes[int(output[r][0])]
     output[r][1] = int(output[r][1])
@@ -107,10 +107,7 @@ for r in range(len(output)):
         g.write(str(output[r][q]))
         if(q == 0):
             g.write("\"")
-        if(q != 4):
-            g.write(',')
-        else:
-            g.write("\n")
+        g.write(',')
     if(r != len(output)-1):
         g.write('},')
     else:
