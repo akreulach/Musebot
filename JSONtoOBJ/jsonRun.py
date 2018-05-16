@@ -107,7 +107,8 @@ for r in range(len(output)):
         g.write(str(output[r][q]))
         if(q == 0):
             g.write("\"")
-        g.write(',')
+        if(q != 4):
+            g.write(',')
     if(r != len(output)-1):
         g.write('},')
     else:
