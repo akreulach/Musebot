@@ -91,7 +91,7 @@ g = open('garb.txt','w')
 g.write("\"notes\":[")
 for r in range(len(output)):
     output[r][0] = int_to_notes[int(output[r][0])]
-    output[r][1] = int(output[r][1])
+    output[r][1] = int(output[r][1]) + 12
     g.write('{')
     for q in range(5):
         if(q == 0):
