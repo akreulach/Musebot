@@ -1,0 +1,7 @@
+---- Changes ----
+Task: Make some form of distinction for different song files instead of straight notes. 
+	Reasoning: If we're trying to make coherent music and give it songs in different keys, the patterns will be more accurate.
+
+	How: Load in each array of notes uniquely into the array instead of appending them. Maybe id with a #. Could make the list hold the length of the notes too.
+
+Task:

@@ -65,17 +65,17 @@ model.add(Dropout(0.2))
 model.add(Dense(10, kernel_initializer='normal', activation='relu'))
 model.add(Dense(5, kernel_initializer='normal'))
 
-
-
 # load the network weights
 filename = "bestFlat.hdf5"
 model.load_weights(filename)
 model.compile(loss='mean_squared_error', optimizer='adam')
+
 # pick a random seed
 start = numpy.random.randint(0, len(dataX)-100)
 pattern = dataX[start]
 output = []
 shenanigan = []
+
 # generate notes
 for i in range(100):
     x = numpy.reshape(pattern, (1, seq_length * num_features))

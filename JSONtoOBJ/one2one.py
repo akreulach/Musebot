@@ -49,9 +49,12 @@ for i in range(0,num_notes):
 for i in range(0,num_notes):
     notes[i] = list(notes[i].values())
 
+#Input initializaiton 
 num_features = 5
 dataX = []
 dataY = []
+
+#Get all the notes
 for i in range(0, num_notes-1, 1):
     seq_in = notes[i]
     seq_out = notes[i+1]
@@ -59,10 +62,12 @@ for i in range(0, num_notes-1, 1):
     dataY.append(seq_out)
 n_patterns = len(dataX)
 
+#input numpy array filling 
 X = numpy.reshape(dataX, (n_patterns, num_features))
 
 Y = numpy.reshape(dataY, (n_patterns, num_features))
 
+#Model Creation
 model = Sequential()
 model.add(Dense(5, input_dim=5, kernel_initializer='normal')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
