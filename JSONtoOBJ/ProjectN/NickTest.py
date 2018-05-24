@@ -1,11 +1,23 @@
 #import calls
 import json
 import numpy
+import pandas
 from collections import OrderedDict
-from numpy import array 
+from numpy import array
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import Dropout
+from keras.layers import LSTM
+from keras.callbacks import ModelCheckpoint
+from keras.utils import np_utils
+from keras.wrappers.scikit_learn import KerasRegressor
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline 
 
 #List declarations 
-num_files = 2
+num_files = 5
 json_data,songs = [],[]
 
 #Json to list Management
@@ -51,19 +63,23 @@ for j in range(0,len(songs)):
 	#convert each song to numpy
 	songs[j] = array(songs[j])
 	#numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to .csv
-	
-#Input initializaiton 
-num_features = 5
 
+#Model Initialization 
+model = Sequential()
+model.add(Dense(5, input_dim=5, kernel_initializer='normal')) # X.shape[1],X.shape[2]
+model.add(Dropout(0.2))
+model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+model.add(Dense(5, kernel_initializer='normal'))
+model.compile(loss='mean_squared_error', optimizer='adam')
 
+#For improment purposes
+filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+callbacks_list=[checkpoint]
 
+#for loop going through all X and Y data
+for j in range(0,len(songs)):
+	X = songs[j]
+	Y = numpy.roll(songs[j],-1,axis=0)
+	model.fit(X, Y, epochs=20, batch_size=128, callbacks=callbacks_list)
 
-'''
-#Get all the notes
-for i in range(0, num_notes-1, 1):
-    seq_in = notes[i]
-    seq_out = notes[i+1]
-    dataX.append(seq_in)
-    dataY.append(seq_out)
-n_patterns = len(dataX)
-'''
