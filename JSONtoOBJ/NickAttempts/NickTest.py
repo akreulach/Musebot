@@ -80,6 +80,6 @@ callbacks_list=[checkpoint]
 #for loop going through all X and Y data
 for j in range(0,len(songs)):
 	X = songs[j]
-	Y = numpy.roll(songs[j],-1,axis=0)
+	Y = numpy.roll(songs[j],-1,axis=0) 
 	model.fit(X, Y, epochs=20, batch_size=128, callbacks=callbacks_list)
 
