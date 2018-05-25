@@ -66,7 +66,7 @@ model.add(Dense(10, kernel_initializer='normal', activation='relu'))
 model.add(Dense(5, kernel_initializer='normal'))
 
 # load the network weights
-filename = "bestFlat.hdf5"
+filename = "NickM1.hdf5"
 model.load_weights(filename)
 model.compile(loss='mean_squared_error', optimizer='adam')
 
@@ -85,7 +85,7 @@ for i in range(100):
     pattern = pattern[1:len(pattern)]
     output.append(shenanigan)
 
-g = open('garb.txt','w')
+g = open('NM1.txt','w')
 g.write("\"notes\":[")
 for r in range(len(output)):
     output[r][0] = int_to_notes[int(output[r][0])]

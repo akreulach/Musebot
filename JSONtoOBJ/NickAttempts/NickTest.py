@@ -81,8 +81,8 @@ callbacks_list=[checkpoint]
 for j in range(0,len(songs)):
 	X = songs[j]
 	Y = numpy.roll(songs[j],-1,axis=0) 
-	#model.fit(X, Y, epochs=690, batch_size=128, callbacks=callbacks_list)
+	model.fit(X, Y, epochs=60, batch_size=128, callbacks=callbacks_list)
 	
 #Save model for later
-model.save('NickM1.h5')
+model.save('NickM1.hdf5')
 
