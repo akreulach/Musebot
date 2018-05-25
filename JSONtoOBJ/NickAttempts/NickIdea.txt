@@ -18,6 +18,8 @@ Task: fit_Generator - Trains the model on data generated batch by batch: efficin
 
 Task: predict_Generator - Tests on a generator 
 
+Task: LSTM https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
+
 
 
 
