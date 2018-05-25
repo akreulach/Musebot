@@ -64,6 +64,7 @@ X = numpy.reshape(dataX, (n_patterns, seq_length * num_features))
 
 Y = numpy.reshape(dataY, (n_patterns, num_features))
 
+#Model Creation
 model = Sequential()
 model.add(Dense(5, input_dim=(seq_length * num_features), kernel_initializer='normal')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))

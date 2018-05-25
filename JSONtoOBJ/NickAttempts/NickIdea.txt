@@ -1,0 +1,25 @@
+---- Changes ----
+Task: Make some form of distinction for different song files instead of straight notes. 
+	Reasoning: If we're trying to make coherent music and give it songs in different keys, the patterns will be more accurate.
+
+	How: Load in each array of notes uniquely into the array instead of appending them. Maybe id with a #. Could make the list hold the length of the notes too.
+
+Task: The Merge layer
+
+Task: Shouldn't the Y input be labels?
+
+Task: More Nodes on the models, We need more layers for more complex relations
+
+Task: Compilers - We should use to get the model for training
+
+Task: Train On Batch - Good for using lots of data 
+
+Task: fit_Generator - Trains the model on data generated batch by batch: efficinecy stuff
+
+Task: predict_Generator - Tests on a generator 
+
+Task: LSTM https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
+
+
+
+
