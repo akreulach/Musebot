@@ -1,0 +1,8 @@
+Bug #1:	Append vs Order
+
+	If a json file has multiple tracks with individual note arrays,
+	the current code appends them. That is, puts the next array at the back.
+	Many json files contains a left and right hand section. This means
+	that the right hand completes play and then the left hand begins.
+	This defies what the time-played variable implies. The note array should
+	be interleaved based on the time-played variable rather than appending.

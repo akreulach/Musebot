@@ -1,6 +1,7 @@
 import json
 import numpy
 import pandas
+from collections import OrderedDict
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -21,7 +22,7 @@ notes = []
 for i in range(0,num_files):
     json_data.append(open("examples/Midi" + str(i+1) + ".json").read())
 
-    entire_parsed_json = json.loads(json_data[i])
+    entire_parsed_json = json.loads(json_data[i], object_pairs_hook=OrderedDict)
     tracks = entire_parsed_json["tracks"] # Extracts list of tracks
 
     for track in tracks:
@@ -34,7 +35,7 @@ raw_notes = []
 this_note = []
 for i in range(0,num_notes):
     this_note = notes[i]
-    raw_notes.append(this_note["name"])
+    raw_notes.append(this_note["name"]) # Bug: appends list rather than merging by time
 
 note_names = sorted(list(set(raw_notes)))
 notes_to_int = dict((c,i) for i, c in enumerate(note_names))
