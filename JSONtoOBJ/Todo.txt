@@ -1,8 +1,30 @@
 Bug #1:	Append vs Order
 
+	Line 29: notes = notes + track["notes"]
+
 	If a json file has multiple tracks with individual note arrays,
 	the current code appends them. That is, puts the next array at the back.
 	Many json files contains a left and right hand section. This means
 	that the right hand completes play and then the left hand begins.
 	This defies what the time-played variable implies. The note array should
 	be interleaved based on the time-played variable rather than appending.
+
+Bug #2: Note Dictionary
+
+	Line 41: notes_to_int = dict((c,i) for i, c in enumerate(note_names))
+
+	This line creates a mapping from the note values(C#0, ...) to integers ranging
+	1 to ~70. If the song list does not contain a certain note value, then the
+	dictionary will skip a note. This may cause issues due to how the note values
+	correspond to mathematically significant offsets in frequency. That is, note
+	values are ordinal and skipping a step destroys that information.
+
+Bug #3: Input Dimensions
+
+	Line 70: model.add(Dense(5, input_dim=(seq_length * num_features), kernel_initializer='normal')) # X.shape[1],X.shape[2]
+
+	Key section: input_dim=(seq_length * num_features)
+
+	Currently the A.I. is trained with a batch of notes flattened into one
+	megalength input vector. This might have a serious impact on the ability
+	of the A.I. to interpret the relation between the various note blocks.
