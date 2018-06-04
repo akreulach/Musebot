@@ -20,6 +20,10 @@ Task: predict_Generator - Tests on a generator
 
 Task: LSTM https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
 
+Task: Way more nodes
+
+Task: Split up files for simplicity
+
 
 
 

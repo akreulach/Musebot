@@ -1,0 +1,10 @@
+--Keras Stuff--
+ 
+
+You can use load to load in the model and predict it on new data.
+
+We should use LSTM, it's important to remeber what notes came before.
+
+optimizer is used to train, loss to judge it.
+
+Scale all data from 0 to 1 for the machine to learn well.

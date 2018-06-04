@@ -15,9 +15,10 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline 
+from sklearn.preprocessing import MinMaxScaler
 
 #List declarations 
-num_files = 5
+num_files = 1
 json_data,songs = [],[]
 
 #Json to list Management
@@ -63,14 +64,18 @@ for j in range(0,len(songs)):
 	#convert each song to numpy
 	songs[j] = array(songs[j])
 	#numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to .csv
+	
+# Scaling 
+Scaler = MinMaxScaler(feature_range=(0,1))
 
 #Model Initialization 
 model = Sequential()
-model.add(Dense(5, input_dim=5, kernel_initializer='normal')) # X.shape[1],X.shape[2]
+model.add(Dense(50, input_dim=5, kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
-model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+model.add(Dense(100, kernel_initializer='normal', activation='relu'))
+model.add(Dense(50, activation='relu'))
 model.add(Dense(5, kernel_initializer='normal'))
-model.compile(loss='mean_squared_error', optimizer='adam')
+model.compile(loss='mean_squared_error', optimizer='adam') #Makes the model, measures accuracy(loss), Optimizer
 
 #For improment purposes
 filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
@@ -80,8 +85,10 @@ callbacks_list=[checkpoint]
 #for loop going through all X and Y data
 for j in range(0,len(songs)):
 	X = songs[j]
+	ScaledX = Scaler.fit_transform(X)
 	Y = numpy.roll(songs[j],-1,axis=0) 
-	model.fit(X, Y, epochs=60, batch_size=128, callbacks=callbacks_list)
+	ScaledY = Scaler.transform(Y)
+	model.fit(ScaledX, ScaledY, epochs=60, batch_size=128, callbacks=callbacks_list)
 	
 #Save model for later
 model.save('NickM1.hdf5')

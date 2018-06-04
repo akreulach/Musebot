@@ -28,3 +28,6 @@ Bug #3: Input Dimensions
 	Currently the A.I. is trained with a batch of notes flattened into one
 	megalength input vector. This might have a serious impact on the ability
 	of the A.I. to interpret the relation between the various note blocks.
+	
+	Update: Keras models can be fit incrementally over many for loops so instead of
+	of one data set we can use many and for loop the fit function call.
