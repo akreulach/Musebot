@@ -6,23 +6,21 @@ Task: Make some form of distinction for different song files instead of straight
 
 Task: The Merge layer
 
-Task: Shouldn't the Y input be labels?
-
-Task: More Nodes on the models, We need more layers for more complex relations
-
 Task: Compilers - We should use to get the model for training
 
 Task: Train On Batch - Good for using lots of data 
 
-Task: fit_Generator - Trains the model on data generated batch by batch: efficinecy stuff
+Complete: fit_Generator - Trains the model on data generated batch by batch: efficinecy stuff
 
 Task: predict_Generator - Tests on a generator 
 
 Task: LSTM https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
 
-Task: Way more nodes
+Complete: Way more nodes 
 
 Task: Split up files for simplicity
+
+Task: if this doesnt work we can cherry pick what identifiers go with which characteristic 
 
 
 

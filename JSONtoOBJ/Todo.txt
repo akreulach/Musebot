@@ -8,6 +8,8 @@ Bug #1:	Append vs Order
 	that the right hand completes play and then the left hand begins.
 	This defies what the time-played variable implies. The note array should
 	be interleaved based on the time-played variable rather than appending.
+	
+	Update: Order version is up and running, Just needs to be tested and compared 
 
 Bug #2: Note Dictionary
 
@@ -18,6 +20,9 @@ Bug #2: Note Dictionary
 	dictionary will skip a note. This may cause issues due to how the note values
 	correspond to mathematically significant offsets in frequency. That is, note
 	values are ordinal and skipping a step destroys that information.
+	
+	Update: using a numpy function to save the generated dict with the data, 
+	Still have the problem of unused notes
 
 Bug #3: Input Dimensions
 

@@ -17,9 +17,16 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline 
 from sklearn.preprocessing import MinMaxScaler
 
-#List declarations 
-num_files = 1
-json_data,songs = [],[]
+#Variable declarations 
+num_files = 100
+json_data,songs,notes = [],[],[]
+Scaler = MinMaxScaler(feature_range=(0,1))
+
+
+
+'''Data Management '''
+
+
 
 #Json to list Management
 for i in range(0,num_files):
@@ -51,6 +58,18 @@ for j in range(0,len(songs)):
 note_names = sorted(list(set(all_notes)))
 notes_to_int = dict((c,i) for i, c in enumerate(note_names))
 
+#Save Dict for future use in Testing 
+numpy.save('KeyNotesDict.npy', notes_to_int) 
+
+'''
+To Load Back a numpy dict
+read_dictionary = np.load('my_file.npy').item()
+print(read_dictionary['hello']) # displays "world"
+
+.csv Method
+numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to .csv
+'''
+
 # replaces all string notes with integer notes
 for j in range(0,len(songs)):
 	for i in range(0,len(songs[j])):
@@ -61,12 +80,16 @@ for j in range(0,len(songs)):
 for j in range(0,len(songs)):
 	for i in range(0,len(songs[j])):
 		songs[j][i] = list(songs[j][i].values())
+		notes.append(songs[j][i])
+		
 	#convert each song to numpy
 	songs[j] = array(songs[j])
-	#numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to .csv
 	
-# Scaling 
-Scaler = MinMaxScaler(feature_range=(0,1))
+
+
+'''	MODEL CODE '''
+
+
 
 #Model Initialization 
 model = Sequential()
@@ -74,21 +97,24 @@ model.add(Dense(50, input_dim=5, kernel_initializer='normal',activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(100, kernel_initializer='normal', activation='relu'))
 model.add(Dense(50, activation='relu'))
-model.add(Dense(5, kernel_initializer='normal'))
+model.add(Dense(5, kernel_initializer='normal')) #only the output has to match input dim 
 model.compile(loss='mean_squared_error', optimizer='adam') #Makes the model, measures accuracy(loss), Optimizer
 
-#For improment purposes
-filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
-callbacks_list=[checkpoint]
+#For saving as we go purposes
+#filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
+#checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+#callbacks_list=[checkpoint]
+
+#Fit the transform scalar to the array of notes
+Scaler.fit_transform(notes)
 
 #for loop going through all X and Y data
 for j in range(0,len(songs)):
 	X = songs[j]
-	ScaledX = Scaler.fit_transform(X)
+	ScaledX = Scaler.transform(X)
 	Y = numpy.roll(songs[j],-1,axis=0) 
 	ScaledY = Scaler.transform(Y)
-	model.fit(ScaledX, ScaledY, epochs=60, batch_size=128, callbacks=callbacks_list)
+	model.fit(ScaledX, ScaledY, epochs=60, batch_size=128)
 	
 #Save model for later
 model.save('NickM1.hdf5')
