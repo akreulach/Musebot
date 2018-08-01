@@ -23,9 +23,7 @@ json_data,songs,notes = [],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
 
 
-
 '''Data Management '''
-
 
 
 #Json to list Management
@@ -42,6 +40,7 @@ for i in range(0,num_files):
 	for track in tracks:
 		if track["notes"] != []:
 			songs.append(track["notes"]) # Extracts list of notes variables
+			'''TODO: if track has left and right, put and sort them together'''
 
 # Isolate notes into own lists
 raw_notes,this_note,raw_songs,all_notes = [],[],[],[]
@@ -61,6 +60,7 @@ notes_to_int = dict((c,i) for i, c in enumerate(note_names))
 #Save Dict for future use in Testing 
 numpy.save('KeyNotesDict.npy', notes_to_int) 
 
+
 '''
 To Load Back a numpy dict
 read_dictionary = np.load('my_file.npy').item()
@@ -69,6 +69,7 @@ print(read_dictionary['hello']) # displays "world"
 .csv Method
 numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to .csv
 '''
+
 
 # replaces all string notes with integer notes
 for j in range(0,len(songs)):
@@ -84,11 +85,9 @@ for j in range(0,len(songs)):
 		
 	#convert each song to numpy
 	songs[j] = array(songs[j])
-	
 
 
 '''	MODEL CODE '''
-
 
 
 #Model Initialization 
