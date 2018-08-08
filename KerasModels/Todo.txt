@@ -36,3 +36,10 @@ Bug #3: Input Dimensions
 	
 	Update: Keras models can be fit incrementally over many for loops so instead of
 	of one data set we can use many and for loop the fit function call.
+
+Bug #4: Training Scaler
+	
+	New system scales inputs and outputs during training to the range (0,1)
+	At the moment, the same linear transformation is used on the training
+	data and the test data. This might be a problem, especially if the test
+	data has a different range than the training data.

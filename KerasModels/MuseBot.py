@@ -108,11 +108,17 @@ Scaler.fit_transform(notes)
 
 #for loop going through all X and Y data
 for j in range(0,len(songs)):
-	X = songs[j]
-	ScaledX = Scaler.transform(X)
-	Y = numpy.roll(songs[j],-1,axis=0) 
-	ScaledY = Scaler.transform(Y)
-	model.fit(ScaledX, ScaledY, epochs=60, batch_size=128)
+        X = songs[j]
+        print("song")
+        print(X)
+        ScaledX = Scaler.transform(X)
+        print("scaled song")
+        print(ScaledX)
+        Y = numpy.roll(songs[j],-1,axis=0)
+        print("Y")
+        print(Y)
+        ScaledY = Scaler.transform(Y)
+        model.fit(ScaledX, ScaledY, epochs=60, batch_size=128)
 	
 #Save model for later
 model.save('MuseBotM1.hdf5')
