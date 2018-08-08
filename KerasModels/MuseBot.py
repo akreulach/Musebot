@@ -19,7 +19,8 @@ from sklearn.preprocessing import MinMaxScaler
 
 #Variable declarations 
 num_files = 100
-json_data,songs,notes = [],[],[]
+start_test = 95
+json_data,songs,notes,TestData, = [],[],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
 
 
@@ -38,9 +39,12 @@ for i in range(0,num_files):
 
 	#Store the notes in songs/notes
 	for track in tracks:
-		if track["notes"] != []:
+		if track["notes"] != [] and i < start_test:
 			songs.append(track["notes"]) # Extracts list of notes variables
 			'''TODO: if track has left and right, put and sort them together'''
+		#for test Data
+		elif track["notes"] != [] and i >= start_test:
+			TestData.append(track["notes"]) # Extracts list of notes variables
 
 # Isolate notes into own lists
 raw_notes,this_note,raw_songs,all_notes = [],[],[],[]
@@ -74,6 +78,10 @@ numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to
 for j in range(0,len(songs)):
 	for i in range(0,len(songs[j])):
 		songs[j][i]["name"] = notes_to_int[songs[j][i]["name"]]
+		
+for j in range(0,len(TestData)):
+	for i in range(0,len(TestData[j])):
+		TestData[j][i]["name"] = notes_to_int[TestData[j][i]["name"]]
 	
 
 # remove labels, list of dict -> list of list
@@ -84,7 +92,11 @@ for j in range(0,len(songs)):
 		
 	#convert each song to numpy
 	songs[j] = array(songs[j])
-
+	
+for j in range(0,len(TestData)):
+	for i in range(0,len(TestData[j])):
+		TestData.append(list(TestData[j][i].values()))
+		
 
 '''	MODEL CODE '''
 
@@ -124,23 +136,26 @@ for j in range(0,len(songs)):
 model.save('MuseBotM1.hdf5')
 
 '''Model Test'''
+seq_length = 50
+num_features = 5
+
 # pick a random seed
-start = numpy.random.randint(0, len(dataX)-100)
-pattern = dataX[start]
+start = numpy.random.randint(0, len(TestData)-100)
+pattern = Scaler.transform(numpy.reshape(TestData[start],(1,-1)))
 output,shenanigan = [],[]
 
 # generate notes
 for i in range(100):
     x = numpy.reshape(pattern, (1, seq_length * num_features))
     prediction = model.predict(x, verbose=0)
-    shenanigan = prediction.tolist()[0]
+    shenanigan = Scaler.inverse_transform(prediction.tolist()[0])
     pattern.append(shenanigan)
     pattern = pattern[1:len(pattern)]
     output.append(shenanigan)
 	
 	
 '''Save Outcome'''
-out = open('template.txt','w')
+out = open('template.json','w')
 out.write("{\"header\":{\"PPQ\":384,\"bpm\":117.000117000117,\"name\":\"\"},\"startTime\":0,\"duration\":128.17294874999942,\"tracks\":[{\"startTime\":0,\"duration\":128.17294874999942,\"length\":679,")
 out.write("\"notes\":[")
 for r in range(len(output)):
