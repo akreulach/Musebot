@@ -126,6 +126,7 @@ for j in range(0,len(songs)):
         ScaledX = Scaler.transform(X)
         print("scaled song")
         print(ScaledX)
+        #Create Y set by shifting all songs in X left one index
         Y = numpy.roll(songs[j],-1,axis=0)
         print("Y")
         print(Y)
