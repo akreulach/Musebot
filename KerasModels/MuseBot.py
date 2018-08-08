@@ -18,7 +18,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 #Variable declarations 
-num_files = 1
+num_files = 100
 json_data,songs,notes = [],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
 
@@ -121,8 +121,7 @@ model.save('MuseBotM1.hdf5')
 # pick a random seed
 start = numpy.random.randint(0, len(dataX)-100)
 pattern = dataX[start]
-output = []
-shenanigan = []
+output,shenanigan = [],[]
 
 # generate notes
 for i in range(100):
@@ -132,7 +131,7 @@ for i in range(100):
     pattern.append(shenanigan)
     pattern = pattern[1:len(pattern)]
     output.append(shenanigan)
-
+	
 	
 '''Save Outcome'''
 out = open('template.txt','w')
@@ -164,6 +163,7 @@ for r in range(len(output)):
         out.write('}')
 out.write("],\"controlChanges\":{\"64\":[]},\"id\":0,\"name\":\"\",\"channelNumber\":0,\"isPercussion\":false}]}")
 out.close()
+
 print("\nDone.")
 # Input: {"name":"E4","midi":64,"time":9.309090909090909,"velocity":0.5748031496062992,"duration":0.5250000000000004}
 
