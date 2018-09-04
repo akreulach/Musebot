@@ -20,7 +20,7 @@ from sklearn.preprocessing import MinMaxScaler
 #Variable declarations 
 num_files = 100
 start_test = 95
-json_data,songs,notes,TestData, = [],[],[],[]
+json_data,songs,notes,TestData,TestX = [],[],[],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
 
 
@@ -95,7 +95,7 @@ for j in range(0,len(songs)):
 	
 for j in range(0,len(TestData)):
 	for i in range(0,len(TestData[j])):
-		TestData.append(list(TestData[j][i].values()))
+		TestX.append(list(TestData[j][i].values()))		
 		
 
 '''	MODEL CODE '''
@@ -103,7 +103,7 @@ for j in range(0,len(TestData)):
 
 #Model Initialization 
 model = Sequential()
-model.add(Dense(50, input_dim=5, kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
+model.add(Dense(50, input_shape=(5,5), kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
 model.add(Dense(100, kernel_initializer='normal', activation='relu'))
 model.add(Dense(50, activation='relu'))
@@ -119,43 +119,45 @@ model.compile(loss='mean_squared_error', optimizer='adam') #Makes the model, mea
 Scaler.fit_transform(notes)
 
 #for loop going through all X and Y data
+'''
 for j in range(0,len(songs)):
-        X = songs[j]
-        print("song")
-        print(X)
-        ScaledX = Scaler.transform(X)
-        print("scaled song")
-        print(ScaledX)
-        #Create Y set by shifting all songs in X left one index
-        Y = numpy.roll(songs[j],-1,axis=0)
-        print("Y")
-        print(Y)
-        ScaledY = Scaler.transform(Y)
-        model.fit(ScaledX, ScaledY, epochs=60, batch_size=128)
+    X = songs[j]
+    ScaledX = Scaler.transform(X)
+    #Create Y set by shifting all songs in X left 6 indexes
+	Y = numpy.roll(songs[j],-6,axis=0)
+    ScaledY = Scaler.transform(Y)
+	for i in range(0, len(songs[j]))
+        #model.fit(ScaledX, ScaledY, epochs=60, batch_size=128)
+	'''
 	
 #Save model for later
 model.save('MuseBotM1.hdf5')
 
 '''Model Test'''
-seq_length = 50
-num_features = 5
-
+'''
 # pick a random seed
-start = numpy.random.randint(0, len(TestData)-100)
-pattern = Scaler.transform(numpy.reshape(TestData[start],(1,-1)))
+start = numpy.random.randint(0, len(TestX)-100)
+pattern = Scaler.transform(TestX[start:start+50])
 output,shenanigan = [],[]
 
 # generate notes
 for i in range(100):
-    x = numpy.reshape(pattern, (1, seq_length * num_features))
-    prediction = model.predict(x, verbose=0)
-    shenanigan = Scaler.inverse_transform(prediction.tolist()[0])
-    pattern.append(shenanigan)
-    pattern = pattern[1:len(pattern)]
-    output.append(shenanigan)
+	x =	pattern
+	prediction = model.predict(x, verbose=0)
+	print(prediction.tolist()[0])
+	shenanigan = list(Scaler.inverse_transform(numpy.reshape(prediction.tolist()[0],(1,-1))))
+	print(pattern.shape)
+	print(pattern)
+	print(shenanigan)
+	pattern.append(numpy.array(shenanigan))
+	pattern = pattern[1:len(pattern)]
+	output.append(shenanigan)
 	
 	
+'''
 '''Save Outcome'''
+
+'''
 out = open('template.json','w')
 out.write("{\"header\":{\"PPQ\":384,\"bpm\":117.000117000117,\"name\":\"\"},\"startTime\":0,\"duration\":128.17294874999942,\"tracks\":[{\"startTime\":0,\"duration\":128.17294874999942,\"length\":679,")
 out.write("\"notes\":[")
@@ -188,4 +190,4 @@ out.close()
 
 print("\nDone.")
 # Input: {"name":"E4","midi":64,"time":9.309090909090909,"velocity":0.5748031496062992,"duration":0.5250000000000004}
-
+'''
