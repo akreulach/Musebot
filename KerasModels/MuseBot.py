@@ -18,7 +18,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 #Variable declarations 
-num_files = 100
+num_files = 2
 start_test = 95
 json_data,songs,notes,TestData,TestX = [],[],[],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
@@ -98,16 +98,18 @@ for j in range(0,len(TestData)):
 		TestX.append(list(TestData[j][i].values()))		
 		
 
+		
 '''	MODEL CODE '''
+
 
 
 #Model Initialization 
 model = Sequential()
-model.add(Dense(50, input_shape=(5,5), kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
+model.add(Dense(5, input_dim=5, kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
 model.add(Dense(100, kernel_initializer='normal', activation='relu'))
 model.add(Dense(50, activation='relu'))
-model.add(Dense(5, kernel_initializer='normal')) #only the output has to match input dim 
+model.add(Dense(1,input_dim = 5, kernel_initializer='normal')) #only the output has to match input dim 
 model.compile(loss='mean_squared_error', optimizer='adam') #Makes the model, measures accuracy(loss), Optimizer
 
 #For saving as we go purposes
@@ -118,17 +120,14 @@ model.compile(loss='mean_squared_error', optimizer='adam') #Makes the model, mea
 #Fit the transform scalar to the array of notes
 Scaler.fit_transform(notes)
 
-#for loop going through all X and Y data
-'''
+#for loop going through all Song data
 for j in range(0,len(songs)):
-    X = songs[j]
-    ScaledX = Scaler.transform(X)
-    #Create Y set by shifting all songs in X left 6 indexes
-	Y = numpy.roll(songs[j],-6,axis=0)
-    ScaledY = Scaler.transform(Y)
-	for i in range(0, len(songs[j]))
-        #model.fit(ScaledX, ScaledY, epochs=60, batch_size=128)
-	'''
+	X = songs[j]
+	ScaledX = Scaler.transform(X)
+	
+	for i in range(6,len(songs[j])):
+		model.fit(ScaledX[i-6:i-1], ScaledX[i], epochs=60, batch_size=128)
+	
 	
 #Save model for later
 model.save('MuseBotM1.hdf5')
