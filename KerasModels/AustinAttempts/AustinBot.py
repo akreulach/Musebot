@@ -19,8 +19,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 #Variable declarations 
-num_files = 100
-json_data,songs,notes = [],[],[]
+num_files = 2
+json_data,songs,notes,TestData = [],[],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
 
 
@@ -59,6 +59,8 @@ for j in range(0,len(songs)):
 #convert to ints
 note_names = sorted(list(set(all_notes)))
 notes_to_int = dict((c,i) for i, c in enumerate(note_names))
+int_to_notes = dict((c,i) for c, i in enumerate(note_names))
+num_notes = len(notes)
 
 #Save Dict for future use in Testing 
 numpy.save('KeyNotesDict.npy', notes_to_int) 
@@ -74,13 +76,13 @@ numpy.savetxt("song" + str(j) + ".csv", songs[j], delimiter = ",") TO convert to
 
 
 # replaces all string notes with integer notes
-for j in range(0,len(songs)):
+for j in range(0,num_files):
 	for i in range(0,len(songs[j])):
 		songs[j][i]["name"] = notes_to_int[songs[j][i]["name"]]
 	
 
 # remove labels, list of dict -> list of list
-for j in range(0,len(songs)):
+for j in range(0,num_files):
 	for i in range(0,len(songs[j])):
 		songs[j][i] = list(songs[j][i].values())
 		notes.append(songs[j][i])
@@ -90,11 +92,23 @@ for j in range(0,len(songs)):
 
 
 '''	MODEL CODE '''
-
+#This code breaks input into sequences of size seq_length
+seq_length = 1
+num_features = 6
+#dataX = []
+#dataY = []
+#for i in range(0, num_notes - seq_length, 1):
+#    seq_in = notes[i:i + seq_length]
+#    seq_out = notes[i+ seq_length]
+#    dataX.append(seq_in)
+#    dataY.append(seq_out)
+#n_patterns = len(dataX)
+#X = numpy.reshape(dataX, (n_patterns, seq_length * num_features))
+#Y = numpy.reshape(dataY, (n_patterns, num_features))
 
 #Model Initialization 
 model = Sequential()
-model.add(Dense(50, input_dim=6, kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
+model.add(Dense(50, input_dim=(seq_length * num_features), kernel_initializer='normal',activation='relu')) # X.shape[1],X.shape[2]
 model.add(Dropout(0.2))
 model.add(Dense(100, kernel_initializer='normal', activation='relu'))
 model.add(Dense(50, activation='relu'))
@@ -122,19 +136,19 @@ for j in range(0,len(songs)):
 model.save('MuseBotM1.hdf5')
 
 '''Model Test'''
+
 # pick a random seed
-start = numpy.random.randint(0, len(dataX)-100)
-pattern = dataX[start]
-output,shenanigan = [],[]
+start = numpy.random.randint(0, len(notes)-100)
+pattern = Scaler.transform(numpy.reshape(notes[start],(1,-1))).tolist()
+output = []
 
 # generate notes
 for i in range(100):
     x = numpy.reshape(pattern, (1, seq_length * num_features))
     prediction = model.predict(x, verbose=0)
-    shenanigan = prediction.tolist()[0]
-    pattern.append(shenanigan)
+    pattern.append(prediction.tolist()[0])
     pattern = pattern[1:len(pattern)]
-    output.append(shenanigan)
+    output.append(prediction.tolist()[0])
 	
 	
 '''Save Outcome'''
