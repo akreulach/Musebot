@@ -123,7 +123,6 @@ Scaler.fit_transform(notes)
 numpy.save('NoteScaler.npy', Scaler) 
 
 #for loop going through all Song data
-'''
 for j in range(0,len(songs)):
 	X = songs[j]
 	ScaledX = Scaler.transform(X)
@@ -131,7 +130,7 @@ for j in range(0,len(songs)):
 	for i in range(6,len(songs[j])):
 		model.fit(ScaledX[i-6:i-1], ScaledX[i], epochs=60, batch_size=128)
 	
-'''
+
 #Save model for later
 model.save('MuseBotM1.hdf5')
 
@@ -145,7 +144,7 @@ pattern = Scaler.transform(TestX[start:start+5])
 output,convPrediction = [],[]
 
 # generate notes
-for i in range(5):
+for i in range(100):
 	prediction = model.predict(pattern, verbose = 0)
 	convPrediction = (Scaler.inverse_transform(numpy.reshape(prediction.tolist(),(1,-1))))
 	pattern = numpy.concatenate((pattern,convPrediction))
