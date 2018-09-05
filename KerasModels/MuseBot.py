@@ -18,7 +18,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 #Variable declarations 
-num_files = 2
+num_files = 100
 start_test = 95
 json_data,songs,notes,TestData,TestX = [],[],[],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
@@ -41,7 +41,7 @@ for i in range(0,num_files):
 	for track in tracks:
 		if track["notes"] != [] and i < start_test:
 			songs.append(track["notes"]) # Extracts list of notes variables
-			'''TODO: if track has left and right, put and sort them together'''
+			
 		#for test Data
 		elif track["notes"] != [] and i >= start_test:
 			TestData.append(track["notes"]) # Extracts list of notes variables
@@ -60,6 +60,7 @@ for j in range(0,len(songs)):
 #convert to ints
 note_names = sorted(list(set(all_notes)))
 notes_to_int = dict((c,i) for i, c in enumerate(note_names))
+int_to_notes = dict((c,i) for c, i in enumerate(note_names))
 
 #Save Dict for future use in Testing 
 numpy.save('KeyNotesDict.npy', notes_to_int) 
@@ -119,8 +120,10 @@ model.compile(loss='mean_squared_error', optimizer='adam') #Makes the model, mea
 
 #Fit the transform scalar to the array of notes
 Scaler.fit_transform(notes)
+numpy.save('NoteScaler.npy', Scaler) 
 
 #for loop going through all Song data
+'''
 for j in range(0,len(songs)):
 	X = songs[j]
 	ScaledX = Scaler.transform(X)
@@ -128,35 +131,31 @@ for j in range(0,len(songs)):
 	for i in range(6,len(songs[j])):
 		model.fit(ScaledX[i-6:i-1], ScaledX[i], epochs=60, batch_size=128)
 	
-	
+'''
 #Save model for later
 model.save('MuseBotM1.hdf5')
 
+
 '''Model Test'''
-'''
+
+
 # pick a random seed
 start = numpy.random.randint(0, len(TestX)-100)
-pattern = Scaler.transform(TestX[start:start+50])
-output,shenanigan = [],[]
+pattern = Scaler.transform(TestX[start:start+5])
+output,convPrediction = [],[]
 
 # generate notes
-for i in range(100):
-	x =	pattern
-	prediction = model.predict(x, verbose=0)
-	print(prediction.tolist()[0])
-	shenanigan = list(Scaler.inverse_transform(numpy.reshape(prediction.tolist()[0],(1,-1))))
-	print(pattern.shape)
-	print(pattern)
-	print(shenanigan)
-	pattern.append(numpy.array(shenanigan))
+for i in range(5):
+	prediction = model.predict(pattern, verbose = 0)
+	convPrediction = (Scaler.inverse_transform(numpy.reshape(prediction.tolist(),(1,-1))))
+	pattern = numpy.concatenate((pattern,convPrediction))
 	pattern = pattern[1:len(pattern)]
-	output.append(shenanigan)
+	output.append(convPrediction[0].tolist())	
 	
-	
-'''
+
 '''Save Outcome'''
 
-'''
+
 out = open('template.json','w')
 out.write("{\"header\":{\"PPQ\":384,\"bpm\":117.000117000117,\"name\":\"\"},\"startTime\":0,\"duration\":128.17294874999942,\"tracks\":[{\"startTime\":0,\"duration\":128.17294874999942,\"length\":679,")
 out.write("\"notes\":[")
@@ -189,4 +188,3 @@ out.close()
 
 print("\nDone.")
 # Input: {"name":"E4","midi":64,"time":9.309090909090909,"velocity":0.5748031496062992,"duration":0.5250000000000004}
-'''
