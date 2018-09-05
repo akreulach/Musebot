@@ -1,4 +1,4 @@
-var MidiConvert = require("./MidiConvert")
+var MidiConvert = require("../MidiConvert")
 var fs = require('fs'); 
 let i = 0;
 var lineReader = require('readline').createInterface({

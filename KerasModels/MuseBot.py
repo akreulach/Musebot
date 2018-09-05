@@ -18,8 +18,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 #Variable declarations 
-num_files = 100
-start_test = 95
+num_files = 5
+start_test = 4
 json_data,songs,notes,TestData,TestX = [],[],[],[],[]
 Scaler = MinMaxScaler(feature_range=(0,1))
 
@@ -64,6 +64,7 @@ int_to_notes = dict((c,i) for c, i in enumerate(note_names))
 
 #Save Dict for future use in Testing 
 numpy.save('KeyNotesDict.npy', notes_to_int) 
+numpy.save('RKeyNotesDict.npy', int_to_notes)
 
 
 '''
@@ -132,7 +133,7 @@ for j in range(0,len(songs)):
 	
 
 #Save model for later
-model.save('MuseBotM1.hdf5')
+model.save('MuseBotM2.hdf5')
 
 
 '''Model Test'''

@@ -2,6 +2,7 @@
 import json
 import numpy
 import pandas
+import keras
 from collections import OrderedDict
 from numpy import array
 from keras.models import Sequential
@@ -18,24 +19,47 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
 '''Load in Dicts/Scales/Model'''
-notes_to_int = np.load('KeyNotesDict.npy').item()
-Scaler = np.load('NoteScaler.npy').item()
-
+notes_to_int = numpy.load('KeyNotesDict.npy').item()
+Scaler = numpy.load('NoteScaler.npy').item()
+int_to_notes = numpy.load('RKeyNotesDict.npy').item()
+model = keras.models.load_model('MuseBotM1.hdf5')
+TestData,TestX,json_data = [],[],[]
 
 '''Load in Test Data'''
 
+#Json to list Management
+for i in range(95,100):
 
+    #parse and store JsonData
+	json_data.append(open("JMids/Midi" + str(i+1) + ".json").read())
+	entire_parsed_json = json.loads(json_data[i-95], object_pairs_hook=OrderedDict)
+	
+    #Load in the tracks for the song
+	tracks = entire_parsed_json["tracks"] # Extracts list of tracks	
+	
+	#for test Data
+	for track in tracks:
+		TestData.append(track["notes"]) # Extracts list of notes variables
+
+# replaces all string notes with integer notes	
+for j in range(0,len(TestData)):
+	for i in range(0,len(TestData[j])):
+		TestData[j][i]["name"] = notes_to_int[TestData[j][i]["name"]]
+	
+for j in range(0,len(TestData)):
+	for i in range(0,len(TestData[j])):
+		TestX.append(list(TestData[j][i].values()))		
+
+		
 
 '''Pass through model test'''
-
-
 # pick a random seed
 start = numpy.random.randint(0, len(TestX)-100)
 pattern = Scaler.transform(TestX[start:start+5])
 output,convPrediction = [],[]
 
 # generate notes
-for i in range(5):
+for i in range(50):
 	prediction = model.predict(pattern, verbose = 0)
 	convPrediction = (Scaler.inverse_transform(numpy.reshape(prediction.tolist(),(1,-1))))
 	pattern = numpy.concatenate((pattern,convPrediction))
@@ -44,8 +68,6 @@ for i in range(5):
 	
 	
 '''Format Data into .json'''
-
-
 out = open('template.json','w')
 out.write("{\"header\":{\"PPQ\":384,\"bpm\":117.000117000117,\"name\":\"\"},\"startTime\":0,\"duration\":128.17294874999942,\"tracks\":[{\"startTime\":0,\"duration\":128.17294874999942,\"length\":679,")
 out.write("\"notes\":[")
